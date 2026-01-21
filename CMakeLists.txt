@@ -6,12 +6,13 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 list(APPEND CMAKE_MODULE_PATH "F:/Dropbox/Dropbox/CompilerUndScripts/CMake/modules")
-
 include(windowsLibs)
 
-add_executable(${PROJECT_NAME} main.cpp
-        classes/audioHandler/audioHandler.cpp
-        classes/audioHandler/audioHandler.h++
+# ---- Executable ----
+add_executable(${PROJECT_NAME}
+        main.cpp
+        #classes/audioHandler/audioHandler.cpp
+        #classes/audioHandler/audioHandler.h++
         classes/textureHandler/textureHandler.cpp
         classes/textureHandler/textureHandler.h++
         classes/chunkRenderer/chunkRenderer.cpp
@@ -24,25 +25,33 @@ add_executable(${PROJECT_NAME} main.cpp
         classes/entity/entity.h++
 )
 
-set(CMAKE_PREFIX_PATH "F:/Dropbox/Dropbox/CPP_LIBARIES/windows")
+if(MSVC)
+    # Detect Windows SDK version automatically
+    file(GLOB WIN_SDK_LIBS "C:/Program Files (x86)/Windows Kits/10/Lib/*/um/x64")
+    list(GET WIN_SDK_LIBS -1 WIN_SDK_LIB_PATH)  # get latest version
 
-find_package(SDL3       CONFIG REQUIRED)
-find_package(SDL3_mixer CONFIG REQUIRED)
-find_package(SDL3_image CONFIG REQUIRED)
-find_package(SDL3_ttf   CONFIG REQUIRED)
-
+    link_directories(${WIN_SDK_LIB_PATH})
+endif()
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE SDL_STATIC)
 
-target_link_options(${PROJECT_NAME} PRIVATE
-        -static-libgcc
-        -static-libstdc++
-)
-
+# ---- Link libraries ----
 target_link_libraries(${PROJECT_NAME} PRIVATE
-        SDL3::SDL3
-        SDL3_MIXER
-        SDL3_IMAGE
-        SDL3_TTF
+        SDL3.lib
+        SDL3_image.lib
+        SDL3_mixer.lib
+        SDL3_net.lib
+        SDL3_ttf.lib
+        SDL3_rtf.lib
         windowsLibs
+        d3d11
+        dxgi
+        d3dcompiler
+        gdi32
+        user32
+        winmm           # for timeBeginPeriod / timeEndPeriod
+        setupapi        # for SetupDi* symbols
+        cfgmgr32        # for CM_* symbols
+        version         # for GetFileVersionInfo / VerQueryValue
+        imm32           # for IME functions
 )
