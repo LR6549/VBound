@@ -26,7 +26,11 @@ add_executable(${PROJECT_NAME} main.cpp
 
 set(CMAKE_PREFIX_PATH "F:/Dropbox/Dropbox/CPP_LIBARIES/windows")
 
-find_package(SDL3 CONFIG REQUIRED)
+find_package(SDL3       CONFIG REQUIRED)
+find_package(SDL3_mixer CONFIG REQUIRED)
+find_package(SDL3_image CONFIG REQUIRED)
+find_package(SDL3_ttf   CONFIG REQUIRED)
+
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE SDL_STATIC)
 
@@ -37,5 +41,8 @@ target_link_options(${PROJECT_NAME} PRIVATE
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
         SDL3::SDL3
+        SDL3_MIXER
+        SDL3_IMAGE
+        SDL3_TTF
         windowsLibs
 )
