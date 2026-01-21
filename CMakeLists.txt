@@ -9,7 +9,20 @@ list(APPEND CMAKE_MODULE_PATH "F:/Dropbox/Dropbox/CompilerUndScripts/CMake/modul
 
 include(windowsLibs)
 
-add_executable(${PROJECT_NAME} main.cpp)
+add_executable(${PROJECT_NAME} main.cpp
+        classes/audioHandler/audioHandler.cpp
+        classes/audioHandler/audioHandler.h++
+        classes/textureHandler/textureHandler.cpp
+        classes/textureHandler/textureHandler.h++
+        classes/chunkRenderer/chunkRenderer.cpp
+        classes/chunkRenderer/chunkRenderer.h++
+        classes/chunk/chunk.cpp
+        classes/chunk/chunk.h++
+        classes/block/block.cpp
+        classes/block/block.h++
+        classes/entity/entity.cpp
+        classes/entity/entity.h++
+)
 
 set(CMAKE_PREFIX_PATH "F:/Dropbox/Dropbox/CPP_LIBARIES/windows")
 
