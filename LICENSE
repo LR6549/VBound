@@ -1,13 +1,32 @@
 Copyright (c) 2026 LR6549
 
-You are permitted to view this source code.
-You may modify this code solely for the purpose of creating mods or extensions
-that depend on this project.
+All rights reserved.
+
+Permission is hereby granted to any person obtaining a copy of this source code
+to view, study, and modify it for personal, educational, and non-commercial
+purposes.
+
+You are allowed to:
+- Read and study the source code for learning purposes
+- Experiment with and modify the code locally
+- Extract small portions of code for educational use or for improving
+  unrelated projects, provided such use does not constitute a substantial
+  portion of this project
+- Create mods, plugins, or extensions that depend on this project
+- Submit contributions, patches, or improvements to this project
 
 You may NOT:
-- Use this code in other projects
-- Redistribute this code or modified versions
-- Sell or sublicense this code
-- Use this code outside of modding this project
+- Use this project, or substantial portions of it, as the basis of another
+  standalone project or product
+- Redistribute this project or modified versions of it
+- Publish forks or mirrors of this project
+- Sell, sublicense, or commercially exploit this code
+- Use this code in proprietary or open-source projects unrelated to this one
+  beyond limited educational excerpts
 
-All rights reserved.
+Any use outside the scope of this license requires explicit written permission
+from the copyright holder.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT.
