@@ -6,22 +6,23 @@
 #define VBOUND_BLOCK_H
 
 #include <cstdint>
-
+#include <string>
 
 namespace VBND {
     class Block {
     private:
         uint8_t b_id;
         uint8_t b_hitpoints;
+        std::string b_name;
         bool b_isSlabHorizontal = false;
         bool b_isSlabVertical = false;
 
     public:
         Block(uint8_t id, uint8_t hitpoints, bool isSlabHorizontal, bool isSlabVertical);
 
-        [[nodiscard]] uint8_t id1() const;
+        [[nodiscard]] uint8_t getID() const;
 
-        [[nodiscard]] uint8_t hitpoints1() const;
+        [[nodiscard]] uint8_t getHitpoints() const;
 
         [[nodiscard]] bool isSlabHorizontal() const;
 

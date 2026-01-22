@@ -34,6 +34,7 @@ add_executable(${PROJECT_NAME}
         classes/mesh/Mesh.h++
         classes/textRenderer/TextRenderer.cpp
         classes/textRenderer/TextRenderer.h++
+        test/cubeTest.cpp
 )
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE SDL_STATIC)

@@ -4,52 +4,100 @@
 
 #include "textureHandler.h++"
 
-bool textureHandler::existsTexture(const std::string& textureName) const {
-    if (textureMap.contains(textureName)) {
-        return true;
-    } return false;
+textureHandler::textureHandler() = default;
+
+int textureHandler::getTextureLayer(const std::string& name) const {
+    auto it = textureLayers.find(name);
+    if (it == textureLayers.end())
+        return -1;
+    return it->second;
 }
 
-SDL_Texture* textureHandler::getTexture(const std::string& textureName) {
-    if (existsTexture(textureName)) {
-        return textureMap[textureName];
-    }
-    return nullptr;
-}
 
-bool textureHandler::loadTexturesFromFolder(const std::string& textureFolder, const std::string& textureName, SDL_Renderer* renderer) {
-    if (!fs::exists(textureFolder)) {
-        JFLX::log("Texture folder does not exist: ", textureFolder, JFLX::LOGTYPE::JFLX_INFO);
-        return false;
-    }
+bool textureHandler::loadTextureFolder(const std::string& folderPath) {
+    std::vector<SDL_Surface*> surfaces;
 
-    for (const auto& dir : fs::recursive_directory_iterator(textureFolder)) {
-        if (dir.is_regular_file() && dir.path().extension() == ".png") {
-            std::string tempPath = dir.path().string();
-            std::string tempName = dir.path().stem().string();
+    for (auto& entry : fs::directory_iterator(folderPath)) {
+        if (!entry.is_regular_file()) continue;
 
-            JFLX::log("Texture: ", (tempName.append(" in ").append(tempPath)), JFLX::LOGTYPE::JFLX_INFO);
+        SDL_Surface* surface = IMG_Load(entry.path().string().c_str());
+        if (!surface) continue;
 
-            //+ load Texture from file
-            SDL_Texture* tex = IMG_LoadTexture(renderer, tempPath.c_str());
-            if (!tex) {
-                JFLX::log("Failed to load texture: ", SDL_GetError(), JFLX::LOGTYPE::JFLX_ERROR);
+        if (surfaces.empty()) {
+            texWidth = surface->w;
+            texHeight = surface->h;
+        } else {
+            if (surface->w != texWidth || surface->h != texHeight) {
+                SDL_DestroySurface(surface);
                 continue;
             }
-
-            textureMap[tempName] = tex;
-            JFLX::log("Loaded Texture: ", (tempPath.append(" in ").append(tempName)), JFLX::LOGTYPE::JFLX_SUCCESS);
         }
+
+        textureLayers[entry.path().stem().string()] = surfaces.size();
+        surfaces.push_back(surface);
     }
 
+    if (surfaces.empty())
+        return false;
+
+    layerCount = surfaces.size();
+
+    glGenTextures(1, &textureArray);
+    glBindTexture(GL_TEXTURE_2D_ARRAY, textureArray);
+
+    glTexStorage3D(
+        GL_TEXTURE_2D_ARRAY,
+        1,
+        GL_RGBA8,
+        texWidth,
+        texHeight,
+        layerCount
+    );
+
+    for (int i = 0; i < layerCount; i++) {
+        SDL_Surface* s = surfaces[i];
+
+        GLenum format = (s->format->BytesPerPixel == 4)
+            ? GL_RGBA
+            : GL_RGB;
+
+        glTexSubImage3D(
+            GL_TEXTURE_2D_ARRAY,
+            0,
+            0, 0, i,
+            texWidth,
+            texHeight,
+            1,
+            format,
+            GL_UNSIGNED_BYTE,
+            s->pixels
+        );
+
+        SDL_DestroySurface(s);
+    }
+
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+    glBindTexture(GL_TEXTURE_2D_ARRAY, 0);
     return true;
 }
 
-void textureHandler::cleanUp() {
-    for (const auto &[fst, snd] : textureMap) {
-        SDL_DestroyTexture(snd);
-        JFLX::log("Cleared Texture: ", fst, JFLX::LOGTYPE::JFLX_SUCCESS);
+void textureHandler::bind(int unit) const {
+    glActiveTexture(GL_TEXTURE0 + unit);
+    glBindTexture(GL_TEXTURE_2D_ARRAY, textureArray);
+}
+
+
+void textureHandler::cleanup() {
+    if (textureArray) {
+        glDeleteTextures(1, &textureArray);
+        textureArray = 0;
     }
-    textureMap.clear();
-    JFLX::log("Finished: ", "textureHandler Clear Up", JFLX::LOGTYPE::JFLX_SUCCESS);
+}
+
+textureHandler::~textureHandler() {
+    cleanup();
 }

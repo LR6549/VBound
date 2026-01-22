@@ -6,11 +6,11 @@
 
 VBND::Block::Block(uint8_t id, uint8_t hitpoints, bool isSlabHorizontal, bool isSlabVertical) : b_id(id), b_hitpoints(hitpoints), b_isSlabHorizontal(isSlabHorizontal), b_isSlabVertical(isSlabVertical) {}
 
-[[nodiscard]] uint8_t VBND::Block::id1() const {
+[[nodiscard]] uint8_t VBND::Block::getID() const {
     return b_id;
 }
 
-[[nodiscard]] uint8_t VBND::Block::hitpoints1() const {
+[[nodiscard]] uint8_t VBND::Block::getHitpoints() const {
     return b_hitpoints;
 }
 

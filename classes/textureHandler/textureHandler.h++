@@ -5,33 +5,37 @@
 #ifndef VBOUND_TEXTUREHANDLER_H
 #define VBOUND_TEXTUREHANDLER_H
 
-#include <iostream>
-#include <fstream>
-#include <filesystem>
 #include <unordered_map>
-#include <JFLX/logging.hpp>
+#include <string>
+#include <filesystem>
+#include <glad/glad.h>
 #include <SDL3/SDL.h>
 #include <SDL3/SDL3_image/SDL_image.h>
 
 namespace fs = std::filesystem;
 
-
 class textureHandler {
 private:
-    std::unordered_map<std::string, SDL_Texture*> textureMap;
+    GLuint textureArray = 0;
+    int texWidth = 0;
+    int texHeight = 0;
+    int layerCount = 0;
+
+    std::unordered_map<std::string, int> textureLayers;
 
 public:
     textureHandler();
     ~textureHandler();
 
-    bool existsTexture(const std::string& textureName) const;
+    bool loadTextureFolder(const std::string& folderPath);
 
-    SDL_Texture* getTexture(const std::string& textureName);
+    int getTextureLayer(const std::string& name) const;
 
-    bool loadTexturesFromFolder(const std::string& textureFolder, const std::string& textureName, SDL_Renderer* renderer);
+    [[nodiscard]] GLuint getTextureArray() const { return textureArray; }
 
-    void cleanUp();
+    void bind(int unit = 0) const;
+
+    void cleanup();
 };
 
-
-#endif //VBOUND_TEXTUREHANDLER_H
+#endif // VBOUND_TEXTUREHANDLER_H
