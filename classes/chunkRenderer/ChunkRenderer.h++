@@ -7,8 +7,10 @@
 #define VBOUND_CHUNKRENDERER_H
 
 
-class chunkRenderer {
-};
+namespace VBND {
+    class ChunkRenderer {
+    };
+}
 
 
 #endif //VBOUND_CHUNKRENDERER_H

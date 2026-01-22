@@ -6,8 +6,9 @@
 #define VBOUND_ENTITY_H
 
 
-class entity {
-};
-
+namespace VBND {
+    class Entity {
+    };
+}
 
 #endif //VBOUND_ENTITY_H

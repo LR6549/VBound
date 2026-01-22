@@ -115,14 +115,12 @@ void rotateY(float angle, float* out){
 }
 
 int main(int argc, char** argv) {
-    if(SDL_Init(SDL_INIT_VIDEO) != 0){
+    if(!SDL_Init(SDL_INIT_VIDEO)){
         std::cerr << "SDL_Init Error: " << SDL_GetError() << "\n";
         return 1;
     }
 
-    SDL_Window* window = SDL_CreateWindow("Rotating Cube",
-        SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-        800, 600, SDL_WINDOW_OPENGL);
+    SDL_Window* window = SDL_CreateWindow("SDL3 X OpenGL  -  Rotating Cube", 800, 600, SDL_WINDOW_OPENGL |SDL_WINDOW_RESIZABLE |SDL_WINDOW_TRANSPARENT);
 
     SDL_GLContext glContext = SDL_GL_CreateContext(window);
     if(!gladLoadGL()){
@@ -195,7 +193,7 @@ int main(int argc, char** argv) {
     glDeleteVertexArrays(1,&VAO);
     glDeleteBuffers(1,&VBO);
     glDeleteProgram(shaderProgram);
-    SDL_GL_DeleteContext(glContext);
+    SDL_GL_DestroyContext(glContext);
     SDL_DestroyWindow(window);
     SDL_Quit();
 }

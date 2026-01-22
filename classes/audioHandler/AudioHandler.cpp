@@ -2,11 +2,13 @@
 // Created by lenny on 21.01.2026.
 //
 
-#include "audioHandler.h++"
+#include "AudioHandler.h++"
 
 #include <ranges>
+#include <SDL3/SDL.h>
+#include <SDL3/SDL3_mixer/SDL_mixer.h>
 
-audioHandler::audioHandler() {
+VBND::AudioHandler::AudioHandler() {
     // Initialize SDL_mixer if needed
     if (!MIX_Init()) {
         JFLX::log("Failed to initialize SDL_mixer: ", SDL_GetError(), JFLX::LOGTYPE::JFLX_ERROR);
@@ -27,7 +29,7 @@ audioHandler::audioHandler() {
     musicTrack = MIX_CreateTrack(musicMixer);
 }
 
-audioHandler::~audioHandler() {
+VBND::AudioHandler::~AudioHandler() {
     clear();
 
     if (musicTrack) MIX_DestroyTrack(musicTrack);
@@ -37,7 +39,7 @@ audioHandler::~audioHandler() {
     MIX_Quit();
 }
 
-void audioHandler::clear() {
+void VBND::AudioHandler::clear() {
     for (const auto &audio: soundMap | std::views::values) {
         if (audio) MIX_DestroyAudio(audio);
     }
@@ -49,7 +51,7 @@ void audioHandler::clear() {
     musicMap.clear();
 }
 
-bool audioHandler::loadSounds(const std::string& path) {
+bool VBND::AudioHandler::loadSounds(const std::string& path) {
     if (!fs::exists(path)) {
         JFLX::log("Sound folder does not exist: ", path, JFLX::LOGTYPE::JFLX_ERROR);
         return false;
@@ -74,7 +76,7 @@ bool audioHandler::loadSounds(const std::string& path) {
     return true;
 }
 
-bool audioHandler::loadMusic(const std::string& path) {
+bool VBND::AudioHandler::loadMusic(const std::string& path) {
     std::string musicFolder = path + "data/music/";
     if (!fs::exists(musicFolder)) {
         JFLX::log("Music folder does not exist: ", musicFolder, JFLX::LOGTYPE::JFLX_ERROR);
@@ -100,7 +102,7 @@ bool audioHandler::loadMusic(const std::string& path) {
     return true;
 }
 
-void audioHandler::playSound(const std::string& soundName) {
+void VBND::AudioHandler::playSound(const std::string& soundName) {
     const auto it = soundMap.find(soundName);
     if (it == soundMap.cend()) {
         JFLX::log("Sound not found: ", soundName, JFLX::LOGTYPE::JFLX_ERROR);
@@ -114,7 +116,7 @@ void audioHandler::playSound(const std::string& soundName) {
     }
 }
 
-void audioHandler::playMusic(const std::string& name, int fadeInMs) {
+void VBND::AudioHandler::playMusic(const std::string& name, int fadeInMs) {
     const auto it = musicMap.find(name);
     if (it == musicMap.end()) {
         JFLX::log("Music not found: ", name, JFLX::LOGTYPE::JFLX_ERROR);
@@ -147,7 +149,7 @@ void audioHandler::playMusic(const std::string& name, int fadeInMs) {
     SDL_DestroyProperties(options);
 }
 
-void audioHandler::stopMusic(const int fadeOutMs) const {
+void VBND::AudioHandler::stopMusic(const int fadeOutMs) const {
     if (musicTrack && MIX_TrackPlaying(musicTrack)) {
         const SDL_PropertiesID props = SDL_CreateProperties();
         // Set fade out duration (milliseconds)
@@ -163,10 +165,10 @@ void audioHandler::stopMusic(const int fadeOutMs) const {
 
 }
 
-bool audioHandler::hasSound(const std::string& soundName) const {
+bool VBND::AudioHandler::hasSound(const std::string& soundName) const {
     return soundMap.contains(soundName);
 }
 
-bool audioHandler::hasMusic(const std::string& musicName) const {
+bool VBND::AudioHandler::hasMusic(const std::string& musicName) const {
     return musicMap.contains(musicName);
 }
