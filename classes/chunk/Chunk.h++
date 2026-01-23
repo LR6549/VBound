@@ -20,7 +20,7 @@
 namespace VBND {
     class Chunk {
     private:
-        bool isDirty = true;
+        bool dirty = true;
 
         int cx, cz;
         //++ X (width) | Y (height) | z (length)
@@ -28,20 +28,36 @@ namespace VBND {
         Mesh mesh;
 
     public:
-        Chunk();
+        Chunk(int chunkX, int chunkZ);
         ~Chunk();
+
+        bool isDirty() const;
+
+        bool isVisible() const;
+
+        int getChunkX(Chunk& c);
+
+        int getChunkZ(Chunk& c);
+
+        std::array<int, 2> getChunkPosition();
+
+        Mesh getMesh();
 
         static bool isAir(int x, int y, int z, Chunk& c);
 
-        void generateChunk(Chunk& c);
+        Block* getBlock(int cx, int y, int cz, Chunk& c);
 
-        void generateMesh(Chunk& c, Mesh& m);
+        void setBlock(int cx, int y, int cz, Chunk& c, uint8_t blockID);
+
+        std::array<Block, 3>* getBlocks();
+
+        void updateChunk();
+
+        bool containsStructure(uint8_t structureID, Chunk& c);
 
         int convertWorldToChunk(int x, int z, Chunk& c);
 
         int convertChunkToWorld(int x, int z, Chunk& c);
-
-        Block* getBlock(int x, int y, int z, Chunk& c);
     };
 }
 

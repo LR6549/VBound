@@ -8,13 +8,13 @@
 #include <vector>
 
 namespace VBND {
-    class player {
+    class Player {
     private:
         std::vector<float> position;
 
     public:
-        player();
-        ~player();
+        Player();
+        ~Player();
     };
 }
 

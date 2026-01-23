@@ -17,8 +17,6 @@ add_executable(${PROJECT_NAME}
         classes/audioHandler/audioHandler.h++
         classes/textureHandler/textureHandler.cpp
         classes/textureHandler/textureHandler.h++
-        classes/chunkRenderer/chunkRenderer.cpp
-        classes/chunkRenderer/chunkRenderer.h++
         classes/chunk/chunk.cpp
         classes/chunk/chunk.h++
         classes/block/block.cpp
@@ -35,6 +33,10 @@ add_executable(${PROJECT_NAME}
         classes/textRenderer/TextRenderer.cpp
         classes/textRenderer/TextRenderer.h++
         test/cubeTest.cpp
+        classes/chunkManager/ChunkManager.cpp
+        classes/chunkManager/ChunkManager.h++
+        classes/mathVector/MathVector.cpp
+        classes/mathVector/MathVector.h++
 )
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE SDL_STATIC)

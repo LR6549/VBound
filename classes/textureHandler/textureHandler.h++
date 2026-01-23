@@ -14,28 +14,33 @@
 
 namespace fs = std::filesystem;
 
-class textureHandler {
-private:
-    GLuint textureArray = 0;
-    int texWidth = 0;
-    int texHeight = 0;
-    int layerCount = 0;
+namespace VBND {
+    class textureHandler {
+    private:
+        GLuint textureArray = 0;
+        int texWidth        = 0;
+        int texHeight       = 0;
+        int layerCount      = 0;
 
-    std::unordered_map<std::string, int> textureLayers;
+        std::unordered_map<std::string, int> textureLayers;
 
-public:
-    textureHandler();
-    ~textureHandler();
+    public:
+        textureHandler();
+        ~textureHandler();
 
-    bool loadTextureFolder(const std::string& folderPath);
+        [[nodiscard]] bool isValid() const { return textureArray != 0; }
 
-    int getTextureLayer(const std::string& name) const;
+        [[nodiscard]] int layers() const { return layerCount; }
 
-    [[nodiscard]] GLuint getTextureArray() const { return textureArray; }
+        bool loadTextureFolder(const std::string& folderPath);
 
-    void bind(int unit = 0) const;
+        int getTextureLayer(const std::string& name) const;
 
-    void cleanup();
-};
+        [[nodiscard]] GLuint getTextureArray() const { return textureArray; }
 
+        void bind(int unit = 0) const;
+
+        void cleanup();
+    };
+}
 #endif // VBOUND_TEXTUREHANDLER_H

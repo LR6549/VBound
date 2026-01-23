@@ -4,63 +4,94 @@
 
 #include "textureHandler.h++"
 
-textureHandler::textureHandler() = default;
+#include <vector>
+#include <algorithm>
+#include <iostream>
 
-int textureHandler::getTextureLayer(const std::string& name) const {
-    auto it = textureLayers.find(name);
-    if (it == textureLayers.end())
-        return -1;
-    return it->second;
+VBND::textureHandler::textureHandler() = default;
+
+VBND::textureHandler::~textureHandler() {
+    cleanup();
 }
 
+bool VBND::textureHandler::loadTextureFolder(const std::string& folderPath) {
+    cleanup();
 
-bool textureHandler::loadTextureFolder(const std::string& folderPath) {
-    std::vector<SDL_Surface*> surfaces;
-
-    for (auto& entry : fs::directory_iterator(folderPath)) {
-        if (!entry.is_regular_file()) continue;
-
-        SDL_Surface* surface = IMG_Load(entry.path().string().c_str());
-        if (!surface) continue;
-
-        if (surfaces.empty()) {
-            texWidth = surface->w;
-            texHeight = surface->h;
-        } else {
-            if (surface->w != texWidth || surface->h != texHeight) {
-                SDL_DestroySurface(surface);
-                continue;
-            }
-        }
-
-        textureLayers[entry.path().stem().string()] = surfaces.size();
-        surfaces.push_back(surface);
+    if (!fs::exists(folderPath) || !fs::is_directory(folderPath)) {
+        std::cerr << "Texture folder does not exist: " << folderPath << "\n";
+        return false;
     }
 
-    if (surfaces.empty())
+    std::vector<fs::path> files;
+    for (const auto& entry : fs::directory_iterator(folderPath)) {
+        if (entry.is_regular_file()) {
+            files.push_back(entry.path());
+        }
+    }
+
+    if (files.empty()) {
+        std::cerr << "Texture folder is empty: " << folderPath << "\n";
         return false;
+    }
 
-    layerCount = surfaces.size();
+    // Deterministic ordering
+    std::sort(files.begin(), files.end());
 
+    std::vector<SDL_Surface*> surfaces;
+    surfaces.reserve(files.size());
+
+    for (const auto& file : files) {
+        SDL_Surface* loaded = IMG_Load(file.string().c_str());
+        if (!loaded) {
+            std::cerr << "Failed to load image: " << file
+                      << " | " << SDL_GetError() << "\n";
+            goto fail;
+        }
+
+        SDL_Surface* converted = SDL_ConvertSurfaceFormat(
+            loaded,
+            SDL_PIXELFORMAT_RGBA32
+        );
+        SDL_DestroySurface(loaded);
+
+        if (!converted) {
+            std::cerr << "Failed to convert image: " << file << "\n";
+            goto fail;
+        }
+
+        surfaces.push_back(converted);
+    }
+
+    texWidth  = surfaces[0]->w;
+    texHeight = surfaces[0]->h;
+    layerCount = static_cast<int>(surfaces.size());
+
+    // Validate sizes
+    for (auto* s : surfaces) {
+        if (s->w != texWidth || s->h != texHeight) {
+            std::cerr << "Texture size mismatch in array\n";
+            goto fail;
+        }
+    }
+
+    // Create texture array
     glGenTextures(1, &textureArray);
     glBindTexture(GL_TEXTURE_2D_ARRAY, textureArray);
 
-    glTexStorage3D(
+    glTexImage3D(
         GL_TEXTURE_2D_ARRAY,
-        1,
+        0,
         GL_RGBA8,
         texWidth,
         texHeight,
-        layerCount
+        layerCount,
+        0,
+        GL_RGBA,
+        GL_UNSIGNED_BYTE,
+        nullptr
     );
 
-    for (int i = 0; i < layerCount; i++) {
-        SDL_Surface* s = surfaces[i];
-
-        GLenum format = (s->format->BytesPerPixel == 4)
-            ? GL_RGBA
-            : GL_RGB;
-
+    for (int i = 0; i < layerCount; ++i) {
         glTexSubImage3D(
             GL_TEXTURE_2D_ARRAY,
             0,
@@ -68,12 +99,12 @@ bool textureHandler::loadTextureFolder(const std::string& folderPath) {
             texWidth,
             texHeight,
             1,
-            format,
+            GL_RGBA,
             GL_UNSIGNED_BYTE,
-            s->pixels
+            surfaces[i]->pixels
         );
 
-        SDL_DestroySurface(s);
+        textureLayers[files[i].stem().string()] = i;
     }
 
     glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -81,23 +112,43 @@ bool textureHandler::loadTextureFolder(const std::string& folderPath) {
     glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
+    glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
     glBindTexture(GL_TEXTURE_2D_ARRAY, 0);
+
+    for (auto* s : surfaces) {
+        SDL_DestroySurface(s);
+    }
+
     return true;
+
+fail:
+    for (auto* s : surfaces) {
+        SDL_DestroySurface(s);
+    }
+    cleanup();
+    return false;
 }
 
-void textureHandler::bind(int unit) const {
+int VBND::textureHandler::getTextureLayer(const std::string& name) const {
+    auto it = textureLayers.find(name);
+    if (it == textureLayers.end()) {
+        return -1;
+    }
+    return it->second;
+}
+
+void VBND::textureHandler::bind(int unit) const {
     glActiveTexture(GL_TEXTURE0 + unit);
     glBindTexture(GL_TEXTURE_2D_ARRAY, textureArray);
 }
 
-
-void textureHandler::cleanup() {
+void VBND::textureHandler::cleanup() {
     if (textureArray) {
         glDeleteTextures(1, &textureArray);
         textureArray = 0;
     }
+
+    textureLayers.clear();
+    texWidth = texHeight = layerCount = 0;
 }
 
-textureHandler::~textureHandler() {
-    cleanup();
-}

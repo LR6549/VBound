@@ -8,42 +8,44 @@
 #include <vector>
 #include <glad/glad.h>
 
-struct Vertex {
-    float px, py, pz;
-    float nx, ny, nz;
-    float u, v;
-    float texId;
-};
+namespace VBND {
+    struct Vertex {
+        float px, py, pz;
+        float nx, ny, nz;
+        float u, v;
+        float texId;
+    };
 
-class Mesh {
-public:
-    Mesh();
-    ~Mesh();
+    class Mesh {
+    public:
+        Mesh();
+        ~Mesh();
 
-    std::vector<Vertex> vertices;
-    std::vector<uint32_t> indices;
+        std::vector<Vertex> vertices;
+        std::vector<uint32_t> indices;
 
-    GLuint vao = 0;
-    GLuint vbo = 0;
-    GLuint ebo = 0;
+        GLuint vao = 0;
+        GLuint vbo = 0;
+        GLuint ebo = 0;
 
-    bool uploaded = false;
+        bool uploaded = false;
 
-    // Upload mesh to GPU
-    void upload();
+        // Upload mesh to GPU
+        void upload();
 
-    // Draw mesh
-    void draw() const;
+        // Draw mesh
+        void draw() const;
 
-    // Free GPU memory
-    void destroy();
+        // Free GPU memory
+        void destroy();
 
-    // Clear CPU data (optional, after upload)
-    void clearCPU();
+        // Clear CPU data (optional, after upload)
+        void clearCPU();
 
-    inline bool empty() const {
-        return indices.empty();
-    }
-};
+        inline bool empty() const {
+            return indices.empty();
+        }
+    };
+}
 
 #endif // VBOUND_MESH_H
