@@ -1,6 +1,6 @@
 <mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/27.0.9 Chrome/134.0.6998.205 Electron/35.4.0 Safari/537.36" version="27.0.9">
   <diagram name="Seite-1" id="wut4B9XPzeVp_EGls2pF">
-    <mxGraphModel dx="292" dy="496" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="1327" dy="2242" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -67,6 +67,30 @@
           <mxGeometry x="-0.0195" relative="1" as="geometry">
             <mxPoint y="22" as="offset" />
           </mxGeometry>
+        </mxCell>
+        <mxCell id="b2RuNQJe3YE14reych_0-1" value="MathVector2&amp;lt;Template T&amp;gt;" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1400" y="40" width="390" height="220" as="geometry" />
+        </mxCell>
+        <mxCell id="b2RuNQJe3YE14reych_0-2" value="+ mv_x : T&lt;br&gt;+ mv_y : T" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="b2RuNQJe3YE14reych_0-1">
+          <mxGeometry y="26" width="390" height="44" as="geometry" />
+        </mxCell>
+        <mxCell id="b2RuNQJe3YE14reych_0-3" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" vertex="1" parent="b2RuNQJe3YE14reych_0-1">
+          <mxGeometry y="70" width="390" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="b2RuNQJe3YE14reych_0-4" value="+ length() : double&lt;div&gt;+ normalized() : MathVector2&amp;lt;T&amp;gt;&lt;/div&gt;&lt;div&gt;+ normalize() : void&lt;br&gt;+ dot (double MathVector2&amp;lt;T&amp;gt;&amp;amp; pVector) : double&lt;br&gt;+ operator+(const MathVector2&amp;lt;T&amp;gt;&amp;amp; other) : MathVector2&amp;lt;T&amp;gt;&lt;br&gt;+ operator-(const MathVector2&amp;lt;T&amp;gt;&amp;amp; other) : MathVector2&amp;lt;T&amp;gt;&lt;br&gt;+ operator*(const MathVector2&amp;lt;T&amp;gt;&amp;amp; other) : MathVector2&amp;lt;T&amp;gt;&lt;br&gt;+ operator/(const MathVector2&amp;lt;T&amp;gt;&amp;amp; other) : MathVector2&amp;lt;T&amp;gt;&lt;br&gt;+ isInFOV(MathVector2&amp;lt;T&amp;gt; pVectDirToObj, double tolerance) : bool&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="b2RuNQJe3YE14reych_0-1">
+          <mxGeometry y="78" width="390" height="142" as="geometry" />
+        </mxCell>
+        <mxCell id="b2RuNQJe3YE14reych_0-5" value="MathVector3&amp;lt;Template T&amp;gt;" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1400" y="280" width="390" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="b2RuNQJe3YE14reych_0-6" value="+ mv_x : T&lt;br&gt;+ mv_y : T&lt;div&gt;+ mv_z : T&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="b2RuNQJe3YE14reych_0-5">
+          <mxGeometry y="26" width="390" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="b2RuNQJe3YE14reych_0-7" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" vertex="1" parent="b2RuNQJe3YE14reych_0-5">
+          <mxGeometry y="80" width="390" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="b2RuNQJe3YE14reych_0-8" value="+ length() : double&lt;div&gt;+ normalized() : MathVector3&amp;lt;T&amp;gt;&lt;/div&gt;&lt;div&gt;+ normalize() : void&lt;br&gt;+ dot (double MathVector3&amp;lt;T&amp;gt;&amp;amp; pVector) : double&lt;br&gt;+ operator+(const MathVector3&amp;lt;T&amp;gt;&amp;amp; other) : MathVector3&amp;lt;T&amp;gt;&lt;br&gt;+ operator-(const MathVector3&amp;lt;T&amp;gt;&amp;amp; other) : MathVector3&amp;lt;T&amp;gt;&lt;br&gt;+ operator*(const MathVector3&amp;lt;T&amp;gt;&amp;amp; other) : MathVector3&amp;lt;T&amp;gt;&lt;br&gt;+ operator/(const MathVector3&amp;lt;T&amp;gt;&amp;amp; other) : MathVector3&amp;lt;T&amp;gt;&lt;br&gt;+ isInFOV(MathVector3&amp;lt;T&amp;gt; pVectDirToObj, double tolerance) : bool&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="b2RuNQJe3YE14reych_0-5">
+          <mxGeometry y="88" width="390" height="142" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
