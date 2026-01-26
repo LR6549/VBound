@@ -42,7 +42,7 @@ namespace VBND {
         // Clear CPU data (optional, after upload)
         void clearCPU();
 
-        inline bool empty() const {
+        [[nodiscard]] bool empty() const {
             return indices.empty();
         }
     };
